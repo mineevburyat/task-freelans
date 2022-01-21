@@ -42,7 +42,7 @@ def updateInfo(hostconf):
 def getPhisicalDisk():
   result = {}
   for disk, disk_count in psutil.disk_io_counters(perdisk=True).items():
-    result[disk] = PhisicalDiskCount(**disk_count._asdict())
+    result[disk] = (PhisicalDiskCount(**disk_count._asdict()))
   return result
 
 def getCPUTimes(id=None):
