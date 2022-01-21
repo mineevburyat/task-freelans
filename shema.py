@@ -11,7 +11,7 @@ class Memory(BaseModel):
 	used: int
 	free: int
 
-class Disk(BaseModel):
+class Partitions(BaseModel):
 	device: str = Field(..., max_length=25, min_length=1)
 	mountpoint: str = Field(..., min_length=1)
 	fstype: str
@@ -29,5 +29,5 @@ class CommonInfo(BaseModel):
     cpu_core: int
     cpu_load: float
     memory: Memory = None
-    disks: List [Disk] = None
+    partitions: List [Partitions] = None
     iflist: List [Interface] = None

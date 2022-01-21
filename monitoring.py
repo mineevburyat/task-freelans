@@ -1,17 +1,20 @@
-from shema import Memory, Disk, Interface, CommonInfo
+from shema import Memory, Partitions, Interface, CommonInfo
 import datetime, psutil,socket
 
+def _getHostname():
+  return socket.gethostname()
+  
 def _getUptime():
   return datetime.datetime.now() - datetime.datetime.fromtimestamp(psutil.boot_time())
 
 def getMemory():
   return Memory(**psutil.virtual_memory()._asdict())
 
-def getDiskList():
-  disks = []
-  for disk in psutil.disk_partitions():
-    disks.append(Disk(**disk._asdict()))
-  return disks
+def getPartList():
+  parts = []
+  for partitions in psutil.disk_partitions():
+    parts.append(Partitions(**partitions._asdict()))
+  return parts
 
 def getInterfaceList():
   interfaces = []
@@ -21,16 +24,17 @@ def getInterfaceList():
   return interfaces
 
 def getInfo():
-  return CommonInfo(hostname = socket.gethostname(),
+  return CommonInfo(hostname = _getHostname(),
     uptime = _getUptime(), 
     cpu_core = psutil.cpu_count(True),
     cpu_load = psutil.cpu_percent(interval=1),
     memory = getMemory(),
-    disks=getDiskList(),
+    partitions=getPartList(),
     iflist = getInterfaceList())
 
 def updateInfo(hostconf):
   hostconf.uptime = _getUptime()
   hostconf.cpu_load = psutil.cpu_percent()
   hostconf.memory = getMemory()
+  hostconf.partitions = getPartList()
   return hostconf
