@@ -12,8 +12,8 @@ class Memory(BaseModel):
 	free: int
 
 class Partitions(BaseModel):
-	device: str = Field(..., max_length=25, min_length=1)
-	mountpoint: str = Field(..., min_length=1)
+	device: str = Field(..., max_length=256, min_length=1)
+	mountpoint: str = Field(..., max_length=20, min_length=1)
 	fstype: str
 	opts: str
 
@@ -72,8 +72,8 @@ class PartUsage(BaseModel):
     percent: float
 
 class PartInfo(BaseModel):
-    device: str = Field(..., max_length=25, min_length=1)
-    mountpoint: str = Field(..., min_length=1)
+    device: str = Field(..., max_length=256, min_length=1)
+    mountpoint: str = Field(..., max_length=20, min_length=1)
     fstype: str
     opts: str
     usage: PartUsage
