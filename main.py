@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Path
 import uvicorn
 from monitoring import *
-from shema import CommonInfo
+from shema import CommonInfo, PhisicalDisks
 
 app = FastAPI()
 
@@ -22,9 +22,9 @@ async def disk_partitions():
 async def get_if_stats():
     return getInterfaceList()
 
-# @app.get('/disk')
-# async def disk_io_counters():
-#     return "phisical disk counter"
+@app.get('/disk', response_model=PhisicalDisks)
+async def disk_io_counters():
+    return {"disks": getPhisicalDisk()}
 
 # @app.get('/cpu/times')
 # async def cpu_time():
@@ -38,13 +38,7 @@ async def get_if_stats():
 # async def cpu_times_percent():
 #     return {"user": 22, "system": 12, "idle": 78}
 
-# @app.get('/cpu/{id}/percent')
-# async def cpu_core_load(id: int = Path(..., description='cpu id', ge=0, lt=hostconf.cpu_core)):
-#     return {"cpu{id}".format(id=id):psutil.cpu_percent(percpu=True)[id]}
-
-# @app.get('/cpu/{id}/times')
-# async def cpu_core_load(id: int = Path(..., title='cpu id', ge=0, lt=hostconf.cpu_core)):
-#     return {"cpu{id}".format(id=id):psutil.cpu_percent(percpu=True)[id]}
+# 
 
 # @app.get('/cpu/{id}/times_percent')
 # async def cpu_core_load(id: int = Path(..., title='cpu id', ge=0, lt=hostconf.cpu_core)):

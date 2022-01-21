@@ -1,9 +1,9 @@
-from shema import Memory, Partitions, Interface, CommonInfo
+from shema import Memory, Partitions, Interface, CommonInfo, PhisicalDiskCount
 import datetime, psutil,socket
 
 def _getHostname():
   return socket.gethostname()
-  
+
 def _getUptime():
   return datetime.datetime.now() - datetime.datetime.fromtimestamp(psutil.boot_time())
 
@@ -38,3 +38,9 @@ def updateInfo(hostconf):
   hostconf.memory = getMemory()
   hostconf.partitions = getPartList()
   return hostconf
+
+def getPhisicalDisk():
+  result = {}
+  for disk, disk_count in psutil.disk_io_counters(perdisk=True).items():
+    result[disk] = PhisicalDiskCount(**disk_count._asdict())
+  return result

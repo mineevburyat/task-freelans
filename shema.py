@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Dict
 # from xmlrpc.client import Boolean, boolean
 import datetime
 
@@ -31,3 +31,14 @@ class CommonInfo(BaseModel):
     memory: Memory = None
     partitions: List [Partitions] = None
     iflist: List [Interface] = None
+
+class PhisicalDiskCount(BaseModel):
+    read_count: int
+    write_count: int
+    read_bytes: int
+    write_bytes: int
+    read_time: int
+    write_time: int
+
+class PhisicalDisks(BaseModel):
+    disks: Dict[str, PhisicalDiskCount]
