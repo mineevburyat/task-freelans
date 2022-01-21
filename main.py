@@ -22,9 +22,9 @@ async def disk_partitions():
 async def get_if_stats():
     return getInterfaceList()
 
-@app.get('/disk', response_model=List[PhisicalDisks])
+@app.get('/disk', response_model=Dict[str, PhisicalDiskCount])
 async def disk_io_counters():
-    return {"disks": getPhisicalDisk()}
+    return getPhisicalDisk()
 
 @app.get('/cpu/times', response_model=Dict[str, CPUTimes])
 async def cpu_times():
