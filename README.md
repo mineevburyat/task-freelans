@@ -5,12 +5,14 @@
 > monitoring.py - function which get host state sach as cpu, memory, disk, interface  
 
 ### get request and answer common host information
-_get request:_
+_get request:_  
+
       curl -X 'GET' \
       'http://127.0.0.1:8000/' \
       -H 'accept: application/json'
 ---
-_answer:_
+_answer:_  
+
       {
       "hostname": "string",
       "uptime": 0,
@@ -38,15 +40,20 @@ _answer:_
           "speed": 0
         }
         ]
-}
-get /cpu - answer detailed information about all cpu and percent usege separately  
-get /disk - answer detailed information about all disks: mount point, size and percent usage  
-get /process -answer detailed information about all processes: pid, owner, cpu usage.
+}  
+
+For read all request and respons use documentations:  
+      http://127.0.0.1/docs  
+      http://127.0.0.1/redoc
 
 
 
-### Requires to work
+### For use project
 Requires the following libraries to be installed:
 * pip install fastapi[all]
 * pip install uvicorn
-* pip install psutil
+* pip install psutil  
+
+After installetions run it:  
+
+* python main.py
