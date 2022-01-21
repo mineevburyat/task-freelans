@@ -1,4 +1,4 @@
-from shema import Memory, Partitions, Interface, CommonInfo, PhisicalDiskCount
+from shema import *
 import datetime, psutil,socket
 
 def _getHostname():
@@ -43,4 +43,51 @@ def getPhisicalDisk():
   result = {}
   for disk, disk_count in psutil.disk_io_counters(perdisk=True).items():
     result[disk] = PhisicalDiskCount(**disk_count._asdict())
+  return result
+
+def getCPUTimes(id=None):
+  result = {}
+  items = psutil.cpu_times(percpu=True)
+  if id is None:
+    index = 0
+    for cpu in items:
+      result["cpu{i}".format(i=index)] = CPUTimes(**cpu._asdict())
+      index += 1
+  else:
+    index = id
+    result["cpu{i}".format(i=index)] = CPUTimes(**items[index]._asdict())
+  return result
+
+def getCPUTimesPercent(id=None):
+  result = {}
+  items = psutil.cpu_times_percent(percpu=True)
+  if id is None:
+    index = 0
+    for cpu in items:
+      result[index] = CPUTimesPersent(**cpu._asdict())
+      index += 1
+    return result
+  else:
+    index = id
+    return NameDict(name="cpu{i}".format(i=index), value = CPUTimesPersent(**items[index]._asdict()))
+  
+
+def getCPUPercent(id=None):
+  common_percent = psutil.cpu_percent()
+  list_percent = psutil.cpu_percent(percpu=True)
+  if id is None:
+    return CPUPercent(common=common_percent, percpu=list_percent)
+  else:
+    return NameFloat(name="cpu{i}".format(i=id), value=list_percent[id])
+
+def getPartitionUsage():
+  partwithfs = []
+  result = []
+  for part in getPartList():
+    if part.fstype != "":
+      partwithfs.append(part)
+  print(partwithfs)
+  for workpart in partwithfs:
+    usagestat = PartUsage(**psutil.disk_usage(workpart.mountpoint)._asdict())
+    result.append(PartInfo(usage=usagestat, **workpart.dict()))
   return result
