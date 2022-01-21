@@ -1,44 +1,73 @@
+from xmlrpc.client import Boolean
 from fastapi import FastAPI
 import uvicorn
-import psutil
-import platform
+import psutil, datetime, socket
+from pydantic import BaseModel, Field
+from typing import List
 
-def getHostName():
-    """Return str - hostname"""
-    return "hostname"
+class Memory(BaseModel):
+	total: int
+	available: int
+	percent: float
+	used: int
+	free: int
 
-def getDiskInfo():
-    """Return list with obj {str(root), str(fstype), num(% usage)}"""
-    return [{"root":"C:\\", "fstype": "ntfs", "usage": 90}, 
-            {"root":"D:\\", "fstype":"ntfs", "usage": 15}]
+class Disk(BaseModel):
+	device: str = Field(..., max_length=25, min_length=1)
+	mountpoint: str = Field(..., min_length=1)
+	fstype: str
+	opts: str
 
-def getCPUcount():
-    """Return number of logical CPU"""
-    return 8
+class Interface(BaseModel):
+    name: str
+    upstatus: Boolean
+    speed: int
 
-def getCPUInfo():
-    """Return list with obj {}"""
-    pass
+
+class CommonInfo(BaseModel):
+    hostname: str
+    uptime: datetime.timedelta
+    cpu_core: int
+    cpu_load: float
+    memory: Memory
+    disks: List [Disk]
+    iflist: List [Interface] = None
 
 app = FastAPI()
-"""route:
-/ - answer common info: hostname, CPU count, Disk count, process count;
-/cpu - answer detailed information about cpu: usage common and usege logical cpu separately;
-/disk - answer detailed information about disks: usage space on all disk;
-/proc - answer datailed information abaut processes: pid, owner, time"""
-@app.get('/')
-async def root():
-    return "common info"
 
-@app.get('/cpu')
+mem = Memory(**psutil.virtual_memory()._asdict())
+
+disks = []
+for disk in psutil.disk_partitions():
+	disks.append(Disk(**disk._asdict()))
+interfaces = []
+for if_name, if_status in psutil.net_if_stats().items():
+    interface = Interface(name=if_name, upstatus=if_status.isup, speed=if_status.speed)
+    interfaces.append(interface)
+
+commoninfo = CommonInfo(hostname = socket.gethostname(),
+    uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(psutil.boot_time()), 
+    cpu_core = psutil.cpu_count(True),
+    cpu_load = psutil.cpu_percent(interval=1),
+    memory = mem,
+    disks=disks,
+    iflist = interfaces)
+
+@app.get('/', response_model=CommonInfo)
+async def home():
+    commoninfo.uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(psutil.boot_time())
+    commoninfo.cpu_load = psutil.cpu_percent()
+    return commoninfo
+
+@app.get('/cpu/{id}')
 async def root():
     return "cpu datailed info"
 
-@app.get('/disk')
+@app.get('/disk/{mountpoint}')
 async def root():
     return "disks datailed info"
 
-@app.get('/proces')
+@app.get('/ifstatus')
 async def root():
     return "processes datailed info"
 
