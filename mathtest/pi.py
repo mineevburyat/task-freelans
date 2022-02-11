@@ -4,7 +4,7 @@ class LeibnicPi:
   accuracy = {2: 1000, 3: 10000, 4: 100000, 5: 1000000, 6: 10000000, 7: 100000000, 8: 1000000000}
   def __init__(self, decimals: int):
     if decimals > 8 or decimals < 2:
-      raise ValueError("Rnge from 2 to 8 inclusive")
+      raise ValueError("Range from 2 to 8 inclusive")
     self.summa = 1
     self.percentwork = 0
     self._halfpercent = LeibnicPi.accuracy[decimals] * 0.005
