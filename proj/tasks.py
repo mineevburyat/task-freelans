@@ -1,4 +1,5 @@
 import queue
+from random import random
 from .celery import app
 from time import sleep
 
@@ -12,7 +13,7 @@ def add(self,x,y):
   # print(self.request.id)
   for i in range(10):
     i += 1
-    sleep(5)
+    sleep(int(15*random()))
     self.update_state(state="PROGRESS", meta={'progress': 10*i})
   return (x + y)
 #celery -A proj worker -l INFO -Q celery,priority.high

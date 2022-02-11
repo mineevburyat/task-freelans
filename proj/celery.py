@@ -7,7 +7,8 @@ class Config:
   timezone = 'Asia/Irkutsk'
   result_expires = 3600
   task_track_started = True
-  result_backend='rpc://'
+  result_backend='redis://192.168.88.82/0'
+  result_persistent=True
   include=['proj.tasks']
 
 class DebugTask(Task):
