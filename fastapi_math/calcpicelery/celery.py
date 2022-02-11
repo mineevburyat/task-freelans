@@ -1,9 +1,10 @@
 from celery import Celery
-from redis import StrictRedis
+from redis import StrictRedis, Redis
 
 redis_host = '192.168.88.82'
 
-redisServer = StrictRedis(host=redis_host)
+# redisServer = StrictRedis(host=redis_host)
+redisServer = Redis(host=redis_host)
 
 app = Celery()
 
