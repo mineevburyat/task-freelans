@@ -4,7 +4,6 @@ from unicodedata import decimal
 from fastapi import FastAPI, Path
 import uvicorn
 # from fastapi_math import calcpicelery
-from pifunc import calcPi
 from shema import *
 
 from calcpicelery.tasks import calcPi as celeryCalcPi
@@ -19,11 +18,11 @@ app = FastAPI()
 async def home():
     return {'about': "Подсчет числа пи методом Лейбница. Подробнее: /docs"}
 
-@app.get('/blocprocess/leibnic/{decimal}')
-async def leibnic_method_calc(decimal: int):
-    return {'pi': calcPi(decimal)}
+@app.get('/leibnic')
+async def about_function():
+    return {'about': "укажите число цифр после запятой"}
 
-@app.get('/nonblocprocess/leibnic/{decimal}')
+@app.get('/leibnic/{decimal}')
 async def leibnic_method_calc_from_celery(decimal: int):
     result = celeryCalcPi.delay(decimal)
     print(result)
