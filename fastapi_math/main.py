@@ -8,7 +8,8 @@ from pifunc import calcPi
 from shema import *
 
 from calcpicelery.tasks import calcPi as celeryCalcPi
-
+# from redis import StrictRedis
+from calcpicelery.celery import redisServer
 
 
 app = FastAPI()
@@ -26,20 +27,11 @@ async def leibnic_method_calc_from_celery(decimal: int):
     result = celeryCalcPi.delay(decimal)
     print(result)
     return {'task_id': result.id,
-            'status': result.status,
-            'result': result.result}
+            'get_status_byredis': 'celery-task-meta-' + result.id}
 
 @app.get("/tasks/{task_id}")
 def get_status(task_id: str):
-    task_result = AsyncResult(task_id, app=celeryCalcPi)
-    if type(task_result) == 'str':
-        return task_result
-    result = {
-        "task_id": task_id,
-        "task_status": task_result.status,
-        "task_result": task_result.result
-    }
-    return result
+    return redisServer.get('celery-task-meta-' + task_id)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info")
