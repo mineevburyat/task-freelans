@@ -1,4 +1,7 @@
 
+
+
+
 ## Демонизация celery для systemd
 1. Склонировать проект в /opt/celery/task-freelans
 2. Скопировать celery.service в /etc/systemd/system/celery.service
