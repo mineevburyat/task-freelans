@@ -3,7 +3,10 @@ Description=uvicorn
 After=network.target
 
 [Service]
-Type=forking
-ExecStart=/opt/celery/task-freelans/fastapi_math/startuvicorn.sh
+PIDFile=/tmp/uvicorn.pid
+Type=simple
+User=root
+WorkingDirectory=/opt/celery/fastapi_math
+ExecStart=/bin/bash -c 'uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2 > /var/log/uvicorn.log 2>&1'
 [Install]
 WantedBy=multi-user.target
