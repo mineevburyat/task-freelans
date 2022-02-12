@@ -1,6 +1,3 @@
-from turtle import back
-from celery.result import AsyncResult
-from unicodedata import decimal
 from fastapi import FastAPI, Path
 import uvicorn
 # from fastapi_math import calcpicelery
