@@ -1,9 +1,9 @@
 [Unit]
-Description=unicorn
+Description=uvicorn
 After=network.target
 
 [Service]
 Type=forking
-ExecStart=/opt/celery/task-freelans/fastapi_math/startunicorn.sh
+ExecStart=/opt/celery/task-freelans/fastapi_math/startuvicorn.sh
 [Install]
 WantedBy=multi-user.target
