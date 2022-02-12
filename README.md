@@ -1,3 +1,8 @@
+Скопировать celery.service в /etc/systemd/system/celery.service
+systemctl deamon-reload
+systemctl enable celery.service
+systemctl enable celery.service
+
 # Host monitoring with psutil and fastapi libraries 
 ## Create for demonstration!
 > main.py - fastapi server  
