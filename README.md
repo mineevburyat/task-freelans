@@ -19,55 +19,8 @@ WorkingDirectory=/opt/celery
 8. Разрешить стартовать при запуске systemctl enable celery.service
 9. systemctl start celery.service
 
-# Host monitoring with psutil and fastapi libraries 
-## Create for demonstration!
-> main.py - fastapi server  
-> shema.py - shema of answer json  
-> monitoring.py - function which get host state sach as cpu, memory, disk, interface  
-
-### get request and answer common host information
-_get request:_  
-
-      curl -X 'GET' \
-      'http://127.0.0.1:8000/' \
-      -H 'accept: application/json'
----
-_answer:_  
-
-      {
-      "hostname": "string",
-      "uptime": 0,
-      "cpu_core": 0,
-      "cpu_load": 0,
-      "memory": {
-        "total": 0,
-        "available": 0,
-        "percent": 0,
-        "used": 0,
-        "free": 0
-      },
-      "disks": [
-        {
-          "device": "string",
-          "mountpoint": "string",
-          "fstype": "string",
-          "opts": "string"
-        }
-        ],
-      "iflist": [
-        {
-          "name": "string",
-          "upstatus": true,
-          "speed": 0
-        }
-        ]
-}  
-
-For read all request and respons use documentations:  
-      http://127.0.0.1/docs  
-      http://127.0.0.1/redoc
-
-
+## Демонизация fastapi с помощью systemd
+1. Создать service файл: type=simple запускать через оболочку bash
 
 ### For use project
 Requires the following libraries to be installed:
