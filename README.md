@@ -1,7 +1,23 @@
-Скопировать celery.service в /etc/systemd/system/celery.service
-systemctl deamon-reload
-systemctl enable celery.service
-systemctl enable celery.service
+
+## Демонизация celery для systemd
+1. Склонировать проект в /opt/celery/task-freelans
+2. Скопировать celery.service в /etc/systemd/system/celery.service
+Обращаем внимание на:
+Type=forking
+User=celery
+Group=celery
+EnvironmentFile=/etc/conf.d/celery
+WorkingDirectory=/opt/celery
+3. Создаем пользователя celery с группой celery
+4. Папке /opt/celery  меняем владельца со всем содержимым chown -R celery:celery /opt/celery
+5. Файл с переменными окружения копируем в /etc/conf.d (если нет создаём)
+Обращаем внимание на CELERY_APP="proj"
+т.е. приложение у нас fastapi_math - переименовываем и эта папка должна лежать непосредственно в workdirectory.
+Либо меняем WorkingDirectory
+6. Копируем celery.conf в /etc/tmpfiles.d - для создания временных папок для PID и log
+7. Перечитать сервисы systemctl deamon-reload
+8. Разрешить стартовать при запуске systemctl enable celery.service
+9. systemctl start celery.service
 
 # Host monitoring with psutil and fastapi libraries 
 ## Create for demonstration!
